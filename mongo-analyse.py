@@ -9,7 +9,7 @@ client  = MongoClient()
 
 db = client['electiondata']
 
-collection = db['tweets31']
+collection = db['tweets']
 
 total_tweets  = collection.count()
 total_rts = collection.count({ "retweeted_status" : { "$exists" : True }})  
@@ -49,9 +49,9 @@ def preprocess(s, lowercase=False):
 stopwords = stopwords.words('english') + ['RT']
 all_tokens = []
 
-for tweet_data in db.tweets31.find():
+for tweet_data in collection.find():
 	if 'text' in tweet_data:
-		tokens =  preprocess(tweet_data["text"].encode('ascii','ignore'))
+		tokens =  preprocess(tweet_data["text"].encode('ascii','ignore').lower())
 		#tokens = word_tokenize(tweet_data["text"].encode('ascii','ignore'))
 		all_tokens += tokens
 frequencies = Counter(all_tokens)
@@ -72,7 +72,6 @@ for token, count in frequencies.most_common(): #iteritems()
 		words.append(token)
 
 
-
 from highcharts import Highchart
 
 chart = Highchart()
@@ -88,16 +87,28 @@ options = {
                 'text':'Number of times mentioned'}
         },
 }
-
-
 chart.set_dict_options(options)
-
-
 chart.add_data_set(data1, 'column', 'Count')
-
 chart.save_file('./column-highcharts')
 
 
+chart2 = Highchart()
+options = {
+'chart': {
+	'type':'column'},
+'title':{
+	'text':'Original Tweets and Retweeted Tweets'},
+'xAxis':{
+	'categories':['Original','Retweets']},
+'yAxis':{
+	'title':{
+		'text':'Number of tweets'}
+	},
+}
+data2 = [total_original, total_rts]
+chart2.set_dict_options(options)
+chart2.add_data_set(data2, 'column', 'Count')
+chart2.save_file('./OTs_vs_RTs')
 
 
 #fav = collection.count({ "retweeted_status" : { "$exists" : False }}, {"favorite_count" : {"$ne" : 0}})
