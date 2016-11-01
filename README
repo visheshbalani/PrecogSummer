@@ -1,1 +1,7 @@
-A description about the Programming Task 
+file twitter-mongo.py was used to collect the tweets
+The database collection is on the dropbox link given below
+https://www.dropbox.com/sh/y2n20u5v6d9hyjv/AAB3AAtLnKEDySAo1YghVSVEa?dl=0
+
+mongo-analyse.py was used to find the top 10 hashtags and plot them. The plot is column-highcharts.html
+The plot for original vs retweeted tweets is OTs_vs_RTs.html
+
